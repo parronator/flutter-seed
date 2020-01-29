@@ -12,6 +12,7 @@ import 'package:meta/meta.dart';
 const String INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid Input - The number must be a positive integer or zero.';
 const String SERVER_FAILURE_MESSAGE = 'Server failure';
+const String NETWORK_FAILURE_MESSAGE = 'Network failure';
 const String UNEXPECTED_FAILURE = 'Unexpected failure';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
@@ -70,6 +71,8 @@ String _mapFailureToMessage(Failure failure) {
       return SERVER_FAILURE_MESSAGE;
     case InvalidInputFailure:
       return INVALID_INPUT_FAILURE_MESSAGE;
+    case NetworkFailure:
+      return NETWORK_FAILURE_MESSAGE;
     default:
       return UNEXPECTED_FAILURE;
   }

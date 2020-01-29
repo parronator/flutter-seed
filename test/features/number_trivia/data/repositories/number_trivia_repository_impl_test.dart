@@ -74,10 +74,10 @@ void main() {
     });
 
     runTestsOffline(() {
-      test('''should return ServerFailure when device is offline''', () async {
+      test('''should return NetworkFailure when device is offline''', () async {
         final result = await repository.getConcreteNumberTrivia(tNumber);
         verifyZeroInteractions(mockRemoteDataSource);
-        expect(result, equals(Left(ServerFailure())));
+        expect(result, equals(Left(NetworkFailure())));
       });
     });
   });
@@ -108,10 +108,10 @@ void main() {
           });
     });
     runTestsOffline(() {
-      test('''should return ServerFailure when device is offline''', () async {
+      test('''should return NetworkFailure when device is offline''', () async {
         final result = await repository.getRandomNumberTrivia();
         verifyZeroInteractions(mockRemoteDataSource);
-        expect(result, equals(Left(ServerFailure())));
+        expect(result, equals(Left(NetworkFailure())));
       });
     });
   });

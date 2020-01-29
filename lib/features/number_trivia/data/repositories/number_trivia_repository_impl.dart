@@ -29,7 +29,7 @@ class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
   }
 
   Future<Either<Failure, NumberTrivia>> _getTrivia(_ConcreteOrRandomChooser getConcreteOrRandom) async {
-    if (!await networkInfo.isConnected) return Left(ServerFailure());
+    if (!await networkInfo.isConnected) return Left(NetworkFailure());
     try {
       final response = await getConcreteOrRandom();
       return Right(response);

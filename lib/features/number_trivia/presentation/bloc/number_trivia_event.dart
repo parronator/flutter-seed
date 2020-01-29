@@ -1,19 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:super_enum/super_enum.dart';
 
-abstract class NumberTriviaEvent extends Equatable {
-  const NumberTriviaEvent();
+part 'number_trivia_event.g.dart';
 
-  @override
-  List<Object> get props => [];
-}
+@superEnum
+enum _NumberTriviaEvent {
+@Data(fields: [
+  DataField('numberString', String),
+])
+GetTriviaForConcreteNumberEvent,
 
-class GetTriviaForConcreteNumberEvent extends NumberTriviaEvent {
-  final String numberString;
-
-  GetTriviaForConcreteNumberEvent(this.numberString);
-
-  @override
-  List<Object> get props => [numberString];
-}
-
-class GetTriviaForRandomNumberEvent extends NumberTriviaEvent {}
+@object
+GetTriviaForRandomNumberEvent,}

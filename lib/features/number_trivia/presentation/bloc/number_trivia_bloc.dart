@@ -12,6 +12,7 @@ import 'package:meta/meta.dart';
 const String INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid Input - The number must be a positive integer or zero.';
 const String SERVER_FAILURE_MESSAGE = 'Server failure';
+const String UNEXPECTED_FAILURE = 'Unexpected failure';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia concrete;
@@ -22,34 +23,54 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
       {@required this.concrete, @required this.random, @required this.inputConverter});
 
   @override
-  NumberTriviaState get initialState => Empty();
+  NumberTriviaState get initialState => NumberTriviaState.empty();
 
   @override
   Stream<NumberTriviaState> mapEventToState(
     NumberTriviaEvent event,
   ) async* {
-    if (event is GetTriviaForConcreteNumberEvent) {
-      final inputEither = inputConverter.stringToUnsignedInt(event.numberString);
-      yield* inputEither.fold(
-        (failure) async* {
-          yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
-        },
-        (integer) async* {
-          yield Loading();
-          final result = await concrete(Params(number: integer));
-          yield* _eitherLoadedOrErrorState(result);
-        },
-      );
-    }
-    if (event is GetTriviaForRandomNumberEvent) {
-      yield Loading();
-      final result = await random(NoParams());
-      yield* _eitherLoadedOrErrorState(result);
-    }
+    yield* await event.when(
+        getTriviaForConcreteNumberEvent: (e) => mapGetTriviaForConcreteNumber(e),
+        getTriviaForRandomNumberEvent: (e) => mapGetTriviaForRandomNumber(e));
   }
 
-  Stream<NumberTriviaState> _eitherLoadedOrErrorState(Either<Failure, NumberTrivia> result) async* {
-     yield result.fold((failure) => Error(message: SERVER_FAILURE_MESSAGE),
-        (trivia) => Loaded(trivia: trivia));
+  Stream<NumberTriviaState> mapGetTriviaForRandomNumber(
+      GetTriviaForRandomNumberEvent e) async* {
+    yield NumberTriviaState.loading();
+    final result = await random(NoParams());
+    yield* _eitherLoadedOrErrorState(result);
+  }
+
+  Stream<NumberTriviaState> mapGetTriviaForConcreteNumber(
+      GetTriviaForConcreteNumberEvent event) async* {
+    final inputEither = inputConverter.stringToUnsignedInt(event.numberString);
+    yield* inputEither.fold(
+      (failure) async* {
+        yield NumberTriviaState.error(message: INVALID_INPUT_FAILURE_MESSAGE);
+      },
+      (integer) async* {
+        yield NumberTriviaState.loading();
+        final result = await concrete(Params(number: integer));
+        yield* _eitherLoadedOrErrorState(result);
+      },
+    );
+  }
+}
+
+Stream<NumberTriviaState> _eitherLoadedOrErrorState(
+    Either<Failure, NumberTrivia> result) async* {
+  yield result.fold(
+      (failure) => NumberTriviaState.error(message: _mapFailureToMessage(failure)),
+      (trivia) => NumberTriviaState.loaded(trivia: trivia));
+}
+
+String _mapFailureToMessage(Failure failure) {
+  switch (failure.runtimeType) {
+    case ServerFailure:
+      return SERVER_FAILURE_MESSAGE;
+    case InvalidInputFailure:
+      return INVALID_INPUT_FAILURE_MESSAGE;
+    default:
+      return UNEXPECTED_FAILURE;
   }
 }

@@ -1,31 +1,24 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_seed/features/number_trivia/domain/entities/number_trivia.dart';
-import 'package:meta/meta.dart';
 
-abstract class NumberTriviaState extends Equatable {
-  const NumberTriviaState();
+import 'package:super_enum/super_enum.dart';
 
-  List<Object> get props => [];
-}
+part 'number_trivia_state.g.dart';
 
-class Empty extends NumberTriviaState {}
+@superEnum
+enum _NumberTriviaState {
+  @object
+  Empty,
 
-class Loading extends NumberTriviaState {}
+  @object
+  Loading,
 
-class Loaded extends NumberTriviaState {
-  final NumberTrivia trivia;
+  @Data(fields: [
+    DataField('trivia', NumberTrivia),
+  ])
+  Loaded,
 
-  Loaded({@required this.trivia});
-
-  @override
-  List<Object> get props => [trivia];
-}
-
-class Error extends NumberTriviaState {
-  final String message;
-
-  Error({@required this.message});
-
-  @override
-  List<Object> get props => [message];
+  @Data(fields: [
+    DataField('message', String),
+  ])
+  Error
 }

@@ -70,7 +70,7 @@ void main() {
         the string to an unsigned integer''', () async {
       setUpMockInputConverterSuccess();
 
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
       await untilCalled(mockInputConverter.stringToUnsignedInt(any));
 
       verify(mockInputConverter.stringToUnsignedInt(tNumberString));
@@ -84,13 +84,13 @@ void main() {
         Error(message: INVALID_INPUT_FAILURE_MESSAGE),
       ];
       expectLater(bloc.cast(), emitsInOrder(expected));
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
     });
 
     test('should get data from the concrete use case', () async {
       setUpMockInputConverterSuccess();
       setUpMockConcreteNumberTriviaSuccess();
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
       await untilCalled(mockGetConcreteNumberTrivia(any));
       verify(mockGetConcreteNumberTrivia(Params(number: tNumberParsed)));
     });
@@ -98,19 +98,19 @@ void main() {
     test('should emit [Loading, Loaded] when data is gotten succesfully', () async {
       setUpMockInputConverterSuccess();
       setUpMockConcreteNumberTriviaSuccess();
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
       final expected = [Empty(), Loading(), Loaded(trivia: tNumberTrivia)];
       expectLater(bloc.cast(), emitsInOrder(expected));
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
     });
 
     test('should emit [Loading, Error] when data is gotten unsuccesfully', () async {
       setUpMockInputConverterSuccess();
       setUpMockConcreteNumberTriviaError();
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
       final expected = [Empty(), Loading(), Error(message: SERVER_FAILURE_MESSAGE)];
       expectLater(bloc.cast(), emitsInOrder(expected));
-      bloc.add(GetTriviaForConcreteNumberEvent(tNumberString));
+      bloc.add(GetTriviaForConcreteNumberEvent(numberString: tNumberString));
     });
   });
 

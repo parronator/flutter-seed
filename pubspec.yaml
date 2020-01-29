@@ -16,11 +16,14 @@ dependencies:
   data_connection_checker: ^0.3.4
   http: ^0.12.0+4
   shared_preferences: ^0.5.6
+  super_enum: ^0.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  build_runner:
+  super_enum_generator: ^0.3.0
 
 flutter:
   uses-material-design: true

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/network/network_info.dart';
 import 'core/util/input_converter.dart';
+import 'features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
 import 'features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
 import 'features/number_trivia/domain/repositories/number_trivia_repository.dart';
@@ -20,10 +21,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetConcreteNumberTrivia(sl()));
   sl.registerLazySingleton(() => GetRandomNumberTrivia(sl()));
   sl.registerLazySingleton(() => InputConverter());
-  sl.registerLazySingleton<NumberTriviaRepository>(
-      () => NumberTriviaRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
+  sl.registerLazySingleton<NumberTriviaRepository>(() => NumberTriviaRepositoryImpl(
+      remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl()));
   sl.registerLazySingleton<NumberTriviaRemoteDataSource>(
       () => NumberTriviaRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<NumberTriviaLocalDataSource>(
+      () => NumberTriviaLocalDataSourceImpl(sharedPreferences: sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);

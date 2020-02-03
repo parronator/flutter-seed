@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/number_trivia/presentation/pages/number_trivia_page.dart';
+import 'package:flutter_seed/routes/router.gr.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.green.shade800,
         accentColor: Colors.green.shade600,
       ),
-      home: NumberTriviaPage(),
+      initialRoute: Router.startPage,
+      onGenerateRoute: Router.onGenerateRoute,
+      navigatorKey: Router.navigatorKey,
     );
   }
 }

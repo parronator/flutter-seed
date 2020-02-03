@@ -47,7 +47,6 @@ class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
     } else {
       try {
         final response = await localDataSource.getLastNumberTrivia();
-        print(response);
         return Right(response);
       } on CacheException {
         return Left(CacheFailure());

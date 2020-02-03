@@ -28,6 +28,16 @@ void main() {
 
     verify(mockCityWeatherRepository.getCityWeather(tCity));
     verifyNoMoreInteractions(mockCityWeatherRepository);
+  });
 
+  test('should get city weather from the repository', () async {
+    when(mockCityWeatherRepository.getCityWeather(any)).thenAnswer((_) async => Right(tCityWeather));
+
+    final result = await usecase(Params(city: tCity));
+
+    expect(result, Right(tCityWeather));
+
+    verify(mockCityWeatherRepository.getCityWeather(tCity));
+    verifyNoMoreInteractions(mockCityWeatherRepository);
   });
 }

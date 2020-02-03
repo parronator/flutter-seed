@@ -34,7 +34,7 @@ void main() {
 
   group('getConcreteNumberTrivia', () {
     test('''should perform a GET request on a URL 
-  with number being the enfpoint and with application/json header''', () async {
+  with number being the endpoint and with application/json header''', () async {
       setUpMockHttpClientSuccess200();
       dataSource.getConcreteNumberTrivia(tNumber);
       verify(mockHttpClient.get(
